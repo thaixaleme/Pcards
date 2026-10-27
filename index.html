@@ -22,9 +22,34 @@
 html{-webkit-text-size-adjust:100%}
 body{margin:0;font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);padding-bottom:env(safe-area-inset-bottom)}
 body.lock{overflow:hidden}
-header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:6px;padding:calc(env(safe-area-inset-top) + 8px) 10px 8px;background:var(--hd-bg);border-bottom:1px solid var(--line)}
+/* Nền pastel + chấm sáng li ti (lớp cố định phía sau nội dung) */
+:root{--page-bg:linear-gradient(160deg,#fff7d6 0%,#ffe9f3 55%,#e8f0ff 100%);--dots:#fff;--hd-grad:linear-gradient(90deg,#FFD43B,#FFB238)}
+@media (prefers-color-scheme:dark){:root{--page-bg:linear-gradient(160deg,#1d1a10 0%,#22121c 55%,#10162a 100%);--dots:#ffffff55;--hd-grad:linear-gradient(90deg,#5a4300,#4a2a00)}}
+body::before,body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none}
+body::before{background:var(--page-bg)}
+body::after{opacity:.55;background-image:radial-gradient(circle,var(--dots) 1.5px,transparent 2px),radial-gradient(circle,#ffd84d 1px,transparent 1.6px);
+  background-size:46px 46px,70px 70px;background-position:0 0,23px 35px}
+header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:6px;padding:calc(env(safe-area-inset-top) + 8px) 10px 8px;background:var(--hd-grad);box-shadow:0 2px 10px rgba(255,170,0,.3)}
 header h1{flex:1;margin:0 4px;font-size:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--hd-text)}
 header .icon{color:var(--hd-text)}
+body[data-page=home] header h1::before{content:'⚡';display:inline-block;margin-right:6px;animation:zap 2.6s infinite}
+@keyframes zap{0%,86%,100%{transform:none}90%{transform:scale(1.25) rotate(-8deg)}}
+/* Trong album: thanh tiêu đề mang màu của album */
+body[data-theme] header{background:linear-gradient(90deg,var(--c1),var(--c2));box-shadow:0 2px 10px -2px var(--c2)}
+body[data-theme] header h1,body[data-theme] header .icon{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3)}
+#prog{position:fixed;left:0;top:0;z-index:30;height:4px;width:100%;transform-origin:left;transform:scaleX(0);transition:transform .3s;
+  background:linear-gradient(90deg,#FFD43B,#FF5FA2,#6EC6FF);box-shadow:0 0 8px #FFD43B}
+
+/* Mẫu màu album (tên mẫu lưu trong album.color) */
+[data-theme=electric]{--c1:#FFD93D;--c2:#FF9F1C}
+[data-theme=fire]{--c1:#FF9A62;--c2:#E5383B}
+[data-theme=water]{--c1:#6EC6FF;--c2:#3A66DB}
+[data-theme=grass]{--c1:#A8E063;--c2:#2E9E5B}
+[data-theme=psychic]{--c1:#F5A8FF;--c2:#9B5DE5}
+[data-theme=ice]{--c1:#9DEBF5;--c2:#4F9BE0}
+[data-theme=fairy]{--c1:#FFB8DE;--c2:#FF5FA2}
+[data-theme=night]{--c1:#6B6FB5;--c2:#1F1D36}
+[data-theme=all]{--c1:#FF9AD5;--c2:#6E8BFF}
 main{max-width:900px;margin:0 auto;padding:14px 12px 100px}
 button{font:inherit;color:inherit;touch-action:manipulation;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .icon{background:none;border:0;font-size:22px;min-width:40px;height:40px;border-radius:10px;color:var(--pri);padding:0 6px;display:inline-flex;align-items:center;justify-content:center}
@@ -46,31 +71,68 @@ input[type=text]{display:block;width:100%;margin-top:4px}
 label,.label{display:block;margin:10px 0;font-size:14px;color:var(--muted)}
 label select{display:block;width:100%;margin-top:4px}
 
-/* Màn hình chính: danh sách album. Ảnh bìa = 3 thẻ đầu tiên xòe ra như cầm bài */
-.albums{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+/* Màn hình chính: ô album có nền màu của album, dải sáng holo quét qua, sao lấp lánh.
+   Ảnh bìa = 3 thẻ đầu tiên xòe ra như cầm bài, thẻ trên cùng bồng bềnh nhẹ */
+.albums{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 @media (min-width:600px){.albums{grid-template-columns:repeat(3,1fr)}}
-.alb{position:relative;display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.cov{position:relative;aspect-ratio:1/1;background:var(--tile);overflow:hidden}
-.cov img{position:absolute;left:50%;top:52%;height:76%;aspect-ratio:63/88;object-fit:cover;border-radius:6px;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.3);transform:translate(-50%,-50%) translateX(var(--dx)) rotate(var(--r))}
-.cov .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;opacity:.5}
-.alb .cap{padding:8px 10px}
-.alb b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.alb small{color:var(--muted)}
-.alb .mv{position:absolute;top:6px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:15px}
+.alb{position:relative;display:block;text-decoration:none;color:#fff;border-radius:20px;overflow:hidden;aspect-ratio:1/1.18;
+  background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.45),transparent 45%),linear-gradient(140deg,var(--c1),var(--c2));
+  box-shadow:0 8px 18px -8px var(--c2),inset 0 0 0 2px rgba(255,255,255,.35)}
+.alb::after{content:'';position:absolute;inset:-20%;pointer-events:none;
+  background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.55) 48%,rgba(255,255,255,.1) 54%,transparent 62%);
+  transform:translateX(-80%);animation:shine 4.5s ease-in-out infinite;animation-delay:var(--d,0s)}
+@keyframes shine{0%,55%{transform:translateX(-80%)}85%,100%{transform:translateX(80%)}}
+.spark{position:absolute;color:#fff;font-size:12px;text-shadow:0 0 6px #fff;animation:tw 2.4s ease-in-out infinite;pointer-events:none;opacity:0}
+@keyframes tw{0%,100%{opacity:0;transform:scale(.4) rotate(0)}50%{opacity:1;transform:scale(1) rotate(45deg)}}
+.fan{position:absolute;left:0;right:0;top:6px;bottom:52px}
+.fan img{position:absolute;left:50%;top:50%;height:84%;aspect-ratio:63/88;object-fit:cover;border-radius:7px;border:3px solid #fff;background:#fff;
+  box-shadow:0 4px 10px rgba(0,0,0,.25);transform:translate(-50%,-50%) translateX(var(--dx)) rotate(var(--r))}
+.fan img:last-child{animation:float 3.5s ease-in-out infinite}
+@keyframes float{0%,100%{margin-top:0}50%{margin-top:-5px}}
+.fan .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;opacity:.7}
+.lab{position:absolute;left:6px;right:6px;bottom:6px;height:44px;padding:3px 9px;border-radius:12px;
+  background:rgba(255,255,255,.22);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.35)}
+.lab b{display:block;font-size:15px;line-height:1.35;text-shadow:0 1px 3px rgba(0,0,0,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lab small{display:block;font-size:12px;line-height:1.3;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.alb .mv{position:absolute;z-index:2;top:6px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:15px}
 .alb .mv.l{left:6px}
 .alb .mv.r{right:6px}
-.newalb{display:block;width:100%;margin-top:14px}
+.newalb{display:block;width:100%;margin-top:16px;padding:12px;border-radius:16px;border:2px dashed #f0b400;background:rgba(255,255,255,.6);font-weight:700;color:#8a5a00;font-size:15px}
+@media (prefers-color-scheme:dark){.newalb{background:rgba(255,255,255,.08);color:#FFD43B}}
 
-/* Danh sách thẻ trong album (tỉ lệ khung = thẻ bài thật 63 x 88) */
-.grid{display:grid;grid-template-columns:repeat(var(--cols),1fr);gap:8px}
-.cd{position:relative;padding:0;border:0;background:var(--tile);border-radius:8px;overflow:hidden;aspect-ratio:63/88;display:block;width:100%}
+/* Đầu trang album: nền màu của album, số thẻ, nút trình chiếu */
+.hero{position:relative;margin:-14px -12px 14px;padding:14px 16px 16px;color:#fff;overflow:hidden;background:linear-gradient(140deg,var(--c1),var(--c2))}
+.hero::after{content:'';position:absolute;inset:-20%;pointer-events:none;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.4) 50%,transparent 60%);
+  transform:translateX(-80%);animation:shine 5s ease-in-out infinite}
+.hero .chips{display:flex;gap:8px}
+.hero .chip{position:relative;z-index:1;border:0;padding:5px 12px;border-radius:20px;background:rgba(255,255,255,.28);color:#fff;font-size:14px;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+
+/* Ô chọn màu album trong hộp thoại */
+.pick{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 4px}
+.pick button{width:36px;height:36px;border-radius:50%;border:0;padding:0;background:linear-gradient(140deg,var(--c1),var(--c2));box-shadow:0 0 0 2px var(--card),0 2px 6px rgba(0,0,0,.2)}
+.pick button.on{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--text)}
+
+/* Danh sách thẻ trong album (tỉ lệ khung = thẻ bài thật 63 x 88). 12 thẻ đầu có ánh holo lướt qua lần lượt */
+.grid{display:grid;grid-template-columns:repeat(var(--cols),1fr);gap:10px}
+.cd{position:relative;padding:0;border:0;background:var(--tile);border-radius:10px;overflow:hidden;aspect-ratio:63/88;display:block;width:100%;box-shadow:0 4px 10px -4px rgba(0,0,0,.35),0 0 0 2px #fff}
+.cd:nth-child(-n+12)::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.5) 45%,rgba(160,220,255,.25) 52%,transparent 65%);
+  transform:translateX(-110%);animation:shine 6s ease-in-out infinite}
+.cd:nth-child(3n+2)::after{animation-delay:.8s}
+.cd:nth-child(3n)::after{animation-delay:1.6s}
+.cd:nth-child(n+4)::after{animation-delay:2.4s}
+.cd:nth-child(n+7)::after{animation-delay:3.2s}
 .cd img{width:100%;height:100%;object-fit:var(--fit);display:block}
 .cd .nm{position:absolute;left:0;right:0;bottom:0;padding:12px 6px 4px;font-size:11px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.7));text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cd .ck{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;border:2px solid #fff;background:rgba(0,0,0,.3);color:#fff;font-size:13px;line-height:20px;text-align:center;font-weight:700}
 .cd.sel{outline:3px solid var(--sel);outline-offset:-3px}
 .cd.sel .ck{background:var(--sel)}
 .cd.sel .ck::after{content:'✓'}
-.fab{position:fixed;right:18px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:6;width:60px;height:60px;border-radius:50%;border:0;background:var(--pri);color:#fff;font-size:32px;line-height:1;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.fab{position:fixed;right:18px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:6;width:62px;height:62px;border-radius:50%;border:3px solid #fff;color:#fff;font-size:32px;line-height:1;
+  background:linear-gradient(140deg,var(--c1,#FF9A62),var(--c2,#D9480F));box-shadow:0 6px 16px -4px var(--c2,#D9480F)}
+.fab::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--c1,#FF9A62);animation:pulse 2.2s ease-out infinite;pointer-events:none}
+@keyframes pulse{0%{transform:scale(.85);opacity:.9}100%{transform:scale(1.3);opacity:0}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important}}
 .ebar{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;gap:6px;justify-content:center;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line)}
 .ebar .btn{padding:9px 10px;font-size:14px}
 
