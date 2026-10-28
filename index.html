@@ -7,57 +7,41 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Picards">
-<meta name="theme-color" content="#FFD43B">
+<meta name="theme-color" content="#FFD400">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png">
 <title>Picards</title>
 <style>
-/* Màu: thanh tiêu đề vàng, nút chính đỏ cam. --sel: màu thẻ đang chọn (chế độ Select) */
-:root{--bg:#fffbea;--card:#fff;--text:#1f1a10;--muted:#7a7160;--line:#efe5c4;--pri:#D9480F;--danger:#dc2626;--hd-bg:#FFD43B;--hd-text:#4a3500;--tile:#f6efd6;--sel:#2563eb;--cols:3;--fit:cover}
+/* Tông màu Pikachu: vàng (--y), nâu đậm (--brown), đỏ má Pikachu (--red) */
+:root{--y:#FFD400;--y2:#FFB800;--brown:#3B2A00;--red:#E3350D;--bg:#FFF6C9;--card:#fff;--text:#2a2000;--muted:#7a6a3a;--line:#f0e2a8;--tile:#f4ecd0;--danger:#dc2626;
+  --page-bg:radial-gradient(circle at 20% 0%,#fffbe0,transparent 60%),linear-gradient(180deg,#FFF6C9,#FFE98A)}
 @media (prefers-color-scheme:dark){
-:root{--bg:#111012;--card:#1c1b1f;--text:#eeeae0;--muted:#a39d8f;--line:#2f2d33;--pri:#FF7A3D;--danger:#f87171;--hd-bg:#3d3000;--hd-text:#FFD43B;--tile:#26252a;--sel:#60a5fa}}
+:root{--bg:#1b1606;--card:#2a2410;--text:#f5ecd0;--muted:#b9a970;--line:#3d341a;--tile:#3a3218;--danger:#f87171;
+  --page-bg:radial-gradient(circle at 20% 0%,#3a2e00,transparent 60%),linear-gradient(180deg,#221b05,#120e02)}}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);padding-bottom:env(safe-area-inset-bottom)}
+body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:var(--page-bg)}
 body.lock{overflow:hidden}
-/* Nền pastel + chấm sáng li ti (lớp cố định phía sau nội dung) */
-:root{--page-bg:linear-gradient(160deg,#fff7d6 0%,#ffe9f3 55%,#e8f0ff 100%);--dots:#fff;--hd-grad:linear-gradient(90deg,#FFD43B,#FFB238)}
-@media (prefers-color-scheme:dark){:root{--page-bg:linear-gradient(160deg,#1d1a10 0%,#22121c 55%,#10162a 100%);--dots:#ffffff55;--hd-grad:linear-gradient(90deg,#5a4300,#4a2a00)}}
-body::before,body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none}
-body::before{background:var(--page-bg)}
-body::after{opacity:.55;background-image:radial-gradient(circle,var(--dots) 1.5px,transparent 2px),radial-gradient(circle,#ffd84d 1px,transparent 1.6px);
-  background-size:46px 46px,70px 70px;background-position:0 0,23px 35px}
-header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:6px;padding:calc(env(safe-area-inset-top) + 8px) 10px 8px;background:var(--hd-grad);box-shadow:0 2px 10px rgba(255,170,0,.3)}
-header h1{flex:1;margin:0 4px;font-size:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--hd-text)}
-header .icon{color:var(--hd-text)}
-body[data-page=home] header h1::before{content:'⚡';display:inline-block;margin-right:6px;animation:zap 2.6s infinite}
+header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:6px;padding:calc(env(safe-area-inset-top) + 8px) 10px 8px;
+  background:linear-gradient(180deg,#FFE033,var(--y));box-shadow:0 2px 0 var(--y2),0 6px 14px -6px rgba(150,100,0,.5)}
+header h1{flex:1;margin:0 4px;font-size:20px;font-weight:900;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--brown)}
+header h1 b{color:var(--red)}
+header h1 .bolt{display:inline-block;margin-right:4px;animation:zap 2.6s infinite}
 @keyframes zap{0%,86%,100%{transform:none}90%{transform:scale(1.25) rotate(-8deg)}}
-/* Trong album: thanh tiêu đề mang màu của album */
-body[data-theme] header{background:linear-gradient(90deg,var(--c1),var(--c2));box-shadow:0 2px 10px -2px var(--c2)}
-body[data-theme] header h1,body[data-theme] header .icon{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3)}
-#prog{position:fixed;left:0;top:0;z-index:30;height:4px;width:100%;transform-origin:left;transform:scaleX(0);transition:transform .3s;
-  background:linear-gradient(90deg,#FFD43B,#FF5FA2,#6EC6FF);box-shadow:0 0 8px #FFD43B}
-
-/* Mẫu màu album (tên mẫu lưu trong album.color) */
-[data-theme=electric]{--c1:#FFD93D;--c2:#FF9F1C}
-[data-theme=fire]{--c1:#FF9A62;--c2:#E5383B}
-[data-theme=water]{--c1:#6EC6FF;--c2:#3A66DB}
-[data-theme=grass]{--c1:#A8E063;--c2:#2E9E5B}
-[data-theme=psychic]{--c1:#F5A8FF;--c2:#9B5DE5}
-[data-theme=ice]{--c1:#9DEBF5;--c2:#4F9BE0}
-[data-theme=fairy]{--c1:#FFB8DE;--c2:#FF5FA2}
-[data-theme=night]{--c1:#6B6FB5;--c2:#1F1D36}
-[data-theme=all]{--c1:#FF9AD5;--c2:#6E8BFF}
-main{max-width:900px;margin:0 auto;padding:14px 12px 100px}
+main{max-width:900px;margin:0 auto;padding:12px 12px 100px}
+/* Màn hình vừa 1 màn hình (sổ album): không cuộn */
+main.fill{display:flex;flex-direction:column;padding-bottom:10px;height:calc(100vh - var(--hh,57px) - env(safe-area-inset-bottom));height:calc(100dvh - var(--hh,57px) - env(safe-area-inset-bottom))}
 button{font:inherit;color:inherit;touch-action:manipulation;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.icon{background:none;border:0;font-size:22px;min-width:40px;height:40px;border-radius:10px;color:var(--pri);padding:0 6px;display:inline-flex;align-items:center;justify-content:center}
-.icon.text{font-size:17px;font-weight:600}
-.icon:disabled{opacity:.4}
-#back{font-size:34px;line-height:1;padding-bottom:4px}
-.btn{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 14px;font-weight:600}
-.btn.primary{background:var(--pri);border-color:var(--pri);color:#fff}
+.icon{background:none;border:0;font-size:22px;min-width:40px;height:40px;border-radius:10px;padding:0 6px;display:inline-flex;align-items:center;justify-content:center}
+header .icon{background:rgba(255,255,255,.55);color:var(--brown);min-width:38px;height:38px;border-radius:12px;font-size:18px;font-weight:800}
+header .icon.text{font-size:15px;padding:0 10px}
+header .icon:disabled{opacity:.4}
+#back{font-size:30px;line-height:1;padding-bottom:3px}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 14px;font-weight:700}
+.btn.primary{background:var(--red);border-color:var(--red);color:#fff}
 .btn.danger{color:var(--danger)}
 .btn.small{padding:7px 12px;font-size:14px}
 .btn:disabled{opacity:.45}
@@ -70,71 +54,51 @@ input[type=text],select{font:inherit;font-size:16px;padding:9px 12px;border:1px 
 input[type=text]{display:block;width:100%;margin-top:4px}
 label,.label{display:block;margin:10px 0;font-size:14px;color:var(--muted)}
 label select{display:block;width:100%;margin-top:4px}
+#prog{position:fixed;left:0;top:0;z-index:30;height:4px;width:100%;transform-origin:left;transform:scaleX(0);transition:transform .3s;
+  background:linear-gradient(90deg,var(--y),var(--red));box-shadow:0 0 8px var(--y)}
 
-/* Màn hình chính: ô album có nền màu của album, dải sáng holo quét qua, sao lấp lánh.
-   Ảnh bìa = 3 thẻ đầu tiên xòe ra như cầm bài, thẻ trên cùng bồng bềnh nhẹ */
-.albums{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-@media (min-width:600px){.albums{grid-template-columns:repeat(3,1fr)}}
-.alb{position:relative;display:block;text-decoration:none;color:#fff;border-radius:20px;overflow:hidden;aspect-ratio:1/1.18;
-  background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.45),transparent 45%),linear-gradient(140deg,var(--c1),var(--c2));
-  box-shadow:0 8px 18px -8px var(--c2),inset 0 0 0 2px rgba(255,255,255,.35)}
-.alb::after{content:'';position:absolute;inset:-20%;pointer-events:none;
-  background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.55) 48%,rgba(255,255,255,.1) 54%,transparent 62%);
-  transform:translateX(-80%);animation:shine 4.5s ease-in-out infinite;animation-delay:var(--d,0s)}
-@keyframes shine{0%,55%{transform:translateX(-80%)}85%,100%{transform:translateX(80%)}}
-.spark{position:absolute;color:#fff;font-size:12px;text-shadow:0 0 6px #fff;animation:tw 2.4s ease-in-out infinite;pointer-events:none;opacity:0}
-@keyframes tw{0%,100%{opacity:0;transform:scale(.4) rotate(0)}50%{opacity:1;transform:scale(1) rotate(45deg)}}
-.fan{position:absolute;left:0;right:0;top:6px;bottom:52px}
-.fan img{position:absolute;left:50%;top:50%;height:84%;aspect-ratio:63/88;object-fit:cover;border-radius:7px;border:3px solid #fff;background:#fff;
-  box-shadow:0 4px 10px rgba(0,0,0,.25);transform:translate(-50%,-50%) translateX(var(--dx)) rotate(var(--r))}
-.fan img:last-child{animation:float 3.5s ease-in-out infinite}
-@keyframes float{0%,100%{margin-top:0}50%{margin-top:-5px}}
-.fan .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;opacity:.7}
-.lab{position:absolute;left:6px;right:6px;bottom:6px;height:44px;padding:3px 9px;border-radius:12px;
-  background:rgba(255,255,255,.22);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.35)}
-.lab b{display:block;font-size:15px;line-height:1.35;text-shadow:0 1px 3px rgba(0,0,0,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lab small{display:block;font-size:12px;line-height:1.3;text-shadow:0 1px 2px rgba(0,0,0,.35)}
-.alb .mv{position:absolute;z-index:2;top:6px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:15px}
-.alb .mv.l{left:6px}
-.alb .mv.r{right:6px}
-.newalb{display:block;width:100%;margin-top:16px;padding:12px;border-radius:16px;border:2px dashed #f0b400;background:rgba(255,255,255,.6);font-weight:700;color:#8a5a00;font-size:15px}
-@media (prefers-color-scheme:dark){.newalb{background:rgba(255,255,255,.08);color:#FFD43B}}
+/* Nút chọn (4 / 9 / 12 / 16 ô, kiểu trình chiếu...) */
+.chips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.chips button{border:2px solid var(--brown);background:#fff;color:var(--brown);border-radius:20px;padding:4px 12px;font-weight:800;font-size:13px}
+.chips button.on{background:var(--brown);color:var(--y)}
+@media (prefers-color-scheme:dark){.chips button{border-color:var(--y);background:transparent;color:var(--y)}.chips button.on{background:var(--y);color:var(--brown)}}
 
-/* Đầu trang album: nền màu của album, số thẻ, nút trình chiếu */
-.hero{position:relative;margin:-14px -12px 14px;padding:14px 16px 16px;color:#fff;overflow:hidden;background:linear-gradient(140deg,var(--c1),var(--c2))}
-.hero::after{content:'';position:absolute;inset:-20%;pointer-events:none;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.4) 50%,transparent 60%);
-  transform:translateX(-80%);animation:shine 5s ease-in-out infinite}
-.hero .chips{display:flex;gap:8px}
-.hero .chip{position:relative;z-index:1;border:0;padding:5px 12px;border-radius:20px;background:rgba(255,255,255,.28);color:#fff;font-size:14px;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+/* ===== Sổ album: trang có N ô bọc nhựa, mép trái có lỗ còng, lật trang như sách ===== */
+.binder{position:relative;flex:1;min-height:0;margin-top:10px;perspective:1600px}
+.book{position:absolute;inset:0 0 58px 0;touch-action:none}
+.page{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;container-type:size;
+  border-radius:6px 16px 16px 6px;padding:12px 12px 12px 24px;transform-origin:left center;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:linear-gradient(90deg,#d9c36a 0,#f3e6a6 10px,#fffdf3 22px,#fffdf3);box-shadow:0 8px 20px -6px rgba(90,60,0,.45),inset 0 0 0 2px #e8d48a;
+  transition:transform .8s cubic-bezier(.45,.05,.3,1)}
+.page::before{content:'';position:absolute;left:7px;top:8%;bottom:8%;width:6px;background:radial-gradient(circle,#a88a2a 2.5px,transparent 3px) 0 0/6px 16.6%}
+.page.turn{transform:rotateY(-170deg)}
+.page.back{transform:rotateY(-170deg);transition:none}
+.pockets{display:grid;gap:7px;width:100%;width:min(100%,calc((100cqh - 7px * (var(--r) - 1)) * 0.716 * var(--c) / var(--r)));grid-template-columns:repeat(var(--c),1fr)}
+.pocket{position:relative;border-radius:6px;aspect-ratio:63/88;background:#f4ecd0;box-shadow:inset 0 1px 3px rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pocket img{width:90%;aspect-ratio:63/88;object-fit:cover;border-radius:5px;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.3)}
+.pocket::after{content:'';position:absolute;inset:0;pointer-events:none;border-radius:6px;   /* tấm nhựa bọc thẻ: bóng sáng chéo */
+  background:linear-gradient(125deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 30%,rgba(255,255,255,0) 70%,rgba(255,255,255,.25) 100%)}
+.pocket.add{font-size:30px;font-weight:900;color:#c9a227;box-shadow:inset 0 0 0 2px #e8d48a;background:repeating-linear-gradient(45deg,#fff9df,#fff9df 6px,#fff2c0 6px,#fff2c0 12px);cursor:pointer}
+.pnav{position:absolute;left:0;right:0;bottom:4px;display:flex;align-items:center;justify-content:center;gap:16px}
+.pnav button{width:46px;height:46px;border-radius:50%;border:3px solid #fff;background:var(--y);color:var(--brown);font-size:22px;font-weight:900;box-shadow:0 3px 8px rgba(150,100,0,.4)}
+.pnav button:disabled{opacity:.35}
+.pnav span{font-weight:800;color:var(--brown);min-width:84px;text-align:center;font-size:15px}
+.pnav small{display:block;font-weight:600;font-size:12px;color:var(--muted)}
+@media (prefers-color-scheme:dark){.pnav span{color:var(--y)}}
 
-/* Ô chọn màu album trong hộp thoại */
-.pick{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 4px}
-.pick button{width:36px;height:36px;border-radius:50%;border:0;padding:0;background:linear-gradient(140deg,var(--c1),var(--c2));box-shadow:0 0 0 2px var(--card),0 2px 6px rgba(0,0,0,.2)}
-.pick button.on{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--text)}
-
-/* Danh sách thẻ trong album (tỉ lệ khung = thẻ bài thật 63 x 88). 12 thẻ đầu có ánh holo lướt qua lần lượt */
-.grid{display:grid;grid-template-columns:repeat(var(--cols),1fr);gap:10px}
-.cd{position:relative;padding:0;border:0;background:var(--tile);border-radius:10px;overflow:hidden;aspect-ratio:63/88;display:block;width:100%;box-shadow:0 4px 10px -4px rgba(0,0,0,.35),0 0 0 2px #fff}
-.cd:nth-child(-n+12)::after{content:'';position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.5) 45%,rgba(160,220,255,.25) 52%,transparent 65%);
-  transform:translateX(-110%);animation:shine 6s ease-in-out infinite}
-.cd:nth-child(3n+2)::after{animation-delay:.8s}
-.cd:nth-child(3n)::after{animation-delay:1.6s}
-.cd:nth-child(n+4)::after{animation-delay:2.4s}
-.cd:nth-child(n+7)::after{animation-delay:3.2s}
-.cd img{width:100%;height:100%;object-fit:var(--fit);display:block}
-.cd .nm{position:absolute;left:0;right:0;bottom:0;padding:12px 6px 4px;font-size:11px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.7));text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cd .ck{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;border:2px solid #fff;background:rgba(0,0,0,.3);color:#fff;font-size:13px;line-height:20px;text-align:center;font-weight:700}
-.cd.sel{outline:3px solid var(--sel);outline-offset:-3px}
-.cd.sel .ck{background:var(--sel)}
-.cd.sel .ck::after{content:'✓'}
-.fab{position:fixed;right:18px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:6;width:62px;height:62px;border-radius:50%;border:3px solid #fff;color:#fff;font-size:32px;line-height:1;
-  background:linear-gradient(140deg,var(--c1,#FF9A62),var(--c2,#D9480F));box-shadow:0 6px 16px -4px var(--c2,#D9480F)}
-.fab::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--c1,#FF9A62);animation:pulse 2.2s ease-out infinite;pointer-events:none}
-@keyframes pulse{0%{transform:scale(.85);opacity:.9}100%{transform:scale(1.3);opacity:0}}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important}}
-.ebar{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;gap:6px;justify-content:center;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line)}
-.ebar .btn{padding:9px 10px;font-size:14px}
+/* ===== Sắp xếp: lưới thẻ chia theo trang, nhấn giữ rồi kéo để đổi chỗ ===== */
+.egrid{display:grid;grid-template-columns:repeat(var(--c),1fr);gap:8px;-webkit-user-select:none;user-select:none}
+.egrid .ph{grid-column:1/-1;font-size:13px;font-weight:800;color:var(--muted);margin:8px 0 -2px}
+.et{position:relative;aspect-ratio:63/88;border-radius:8px;overflow:hidden;background:var(--tile);box-shadow:0 2px 6px rgba(0,0,0,.25);-webkit-touch-callout:none}
+.et img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;-webkit-user-drag:none}
+.et .no{position:absolute;left:4px;top:4px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;font-weight:700;padding:0 6px;border-radius:8px}
+.et .nm{position:absolute;left:0;right:0;bottom:0;padding:10px 5px 3px;font-size:11px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.7));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.et.sel{outline:3px solid var(--red);outline-offset:-3px}
+.et.sel::after{content:'✓';position:absolute;top:5px;right:5px;width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;font-size:13px;font-weight:800;text-align:center;line-height:22px}
+.et.gap{background:repeating-linear-gradient(45deg,#fff6c9,#fff6c9 6px,#ffe98a 6px,#ffe98a 12px);box-shadow:inset 0 0 0 2px var(--y2)}
+.et.gap>*{visibility:hidden}
+.et.ghost{position:fixed;z-index:40;pointer-events:none;margin:0;transform:scale(1.12) rotate(-4deg);box-shadow:0 12px 26px rgba(0,0,0,.45);outline:3px solid var(--red)}
+.ebar{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;gap:8px;justify-content:center;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:var(--card);border-top:2px solid var(--y)}
 
 /* Settings */
 .sect{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px 14px 10px;margin-bottom:14px}
@@ -146,12 +110,8 @@ label.set{margin:0;font-size:16px;color:var(--text)}
 .sw input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
 .sw i{position:absolute;inset:0;border-radius:15px;background:var(--line);transition:.2s;pointer-events:none}
 .sw i::after{content:'';position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:.2s}
-.sw input:checked+i{background:var(--pri)}
+.sw input:checked+i{background:var(--red)}
 .sw input:checked+i::after{left:23px}
-.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
-.seg button{border:0;background:var(--card);padding:7px 14px;font-size:14px;font-weight:600}
-.seg button+button{border-left:1px solid var(--line)}
-.seg button.on{background:var(--pri);color:#fff}
 
 /* Màn hình toàn màn hình (xem thẻ, trình chiếu) */
 .ov{position:fixed;inset:0;z-index:20;background:#000;color:#fff;display:flex;flex-direction:column;touch-action:none;-webkit-user-select:none;user-select:none}
@@ -165,26 +125,29 @@ label.set{margin:0;font-size:16px;color:var(--text)}
 .nav.l{left:8px}
 .nav.r{right:8px}
 @media (hover:none){.nav{display:none}}
-#show{display:block}
-#show .sl{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity 1s}
-#show .sl.on{opacity:1}
-#show .sl.kb{animation:kb linear forwards}
-@keyframes kb{from{transform:scale(1)}to{transform:scale(1.08)}}
-.shname{position:absolute;left:0;right:0;bottom:calc(24px + env(safe-area-inset-bottom));text-align:center;font-size:18px;font-weight:700;text-shadow:0 1px 4px #000,0 0 12px #000;padding:0 16px;pointer-events:none}
+#show{display:block;background:radial-gradient(circle at 50% 40%,#3a2e00,#000 75%)}
+#stage{position:absolute;inset:0;perspective:1400px;overflow:hidden}
+#stage .sl{position:absolute;left:50%;top:48%;max-width:92%;max-height:84%;border-radius:14px;box-shadow:0 12px 34px rgba(0,0,0,.6);
+  transform:translate(-50%,-50%);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+#stage .page{inset:calc(env(safe-area-inset-top) + 56px) 14px calc(env(safe-area-inset-bottom) + 70px) 14px}
+.shname{position:absolute;left:0;right:0;bottom:calc(24px + env(safe-area-inset-bottom));text-align:center;font-size:18px;font-weight:800;text-shadow:0 1px 4px #000,0 0 12px #000;padding:0 16px;pointer-events:none}
 .ctl{position:absolute;inset:0;pointer-events:none;transition:opacity .3s}
 .ctl.hide{opacity:0}
 .ctl:not(.hide) button{pointer-events:auto}
 .ctl .top{position:absolute;left:0;right:0;top:0;background:linear-gradient(rgba(0,0,0,.6),transparent)}
 .ctl .bot{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:28px;padding:30px 0 calc(70px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(0,0,0,.6))}
-.ctl .bot .icon{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.15);font-size:22px}
+.ctl .bot .icon{width:56px;height:56px;border-radius:50%;background:var(--y);color:var(--brown);font-size:22px;border:3px solid #fff}
 
 dialog{border:0;border-radius:18px;padding:18px;width:min(92vw,420px);background:var(--card);color:var(--text);box-shadow:0 10px 40px rgba(0,0,0,.35)}
-dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog::backdrop{background:rgba(40,30,0,.5)}
 dialog h2{margin:0 0 6px;font-size:18px}
 #dlgBody p{margin:6px 0;white-space:pre-line}
+#dlgBody .chips{justify-content:flex-start;margin:6px 0 4px}
+#dlgBody .chips button{padding:7px 12px;font-size:14px}
 #dlgBtns{justify-content:flex-end;flex-wrap:wrap;margin-bottom:0}
-#toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:rgba(20,20,20,.9);color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:90vw;text-align:center}
+#toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:rgba(40,30,0,.92);color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:90vw;text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){header h1 .bolt{animation:none}}
 </style>
 </head>
 <body>
@@ -212,9 +175,9 @@ dialog h2{margin:0 0 6px;font-size:18px}
   <div class="vname" id="vCap"></div>
 </div>
 
-<!-- Trình chiếu: 2 lớp ảnh chồng nhau để chuyển ảnh mờ dần. Chạm vào màn hình để hiện / ẩn nút -->
+<!-- Trình chiếu: mỗi ảnh / trang là 1 phần tử trong #stage, hiệu ứng theo kiểu đã chọn. Chạm vào màn hình để hiện / ẩn nút -->
 <div id="show" class="ov" hidden>
-  <img class="sl" alt=""><img class="sl" alt="">
+  <div id="stage"></div>
   <div class="shname" id="shName"></div>
   <div class="ctl" id="shCtl">
     <div class="top"><span class="grow cnt" id="shCnt"></span><button class="icon" id="shClose" aria-label="Close">✕</button></div>
@@ -234,37 +197,40 @@ dialog h2{margin:0 0 6px;font-size:18px}
 <input type="file" id="addIn" accept="image/*" multiple hidden>
 <input type="file" id="fileIn" accept=".zip,application/zip" hidden>
 <div id="toast"></div>
+<div id="prog"></div>
 
 <script>
 'use strict';
-const VERSION = '1.0';
+const VERSION = '2.0';
 const OPT_KEY = 'picards-opt-v1';
 const DB_NAME = 'picards';
 const IMG_MAX = 1800;   // cạnh dài tối đa của ảnh thẻ khi lưu (px)
-const THUMB_MAX = 480;  // cạnh dài tối đa của ảnh nhỏ dùng trong danh sách (px)
+const THUMB_MAX = 480;  // cạnh dài tối đa của ảnh nhỏ dùng trong sổ album / danh sách (px)
 const PLAY = '▶︎', PAUSE = '❚❚';
+// Số ô mỗi trang sổ album → [số cột, số hàng]
+const GRID = { 4: [2, 2], 9: [3, 3], 12: [3, 4], 16: [4, 4] };
+// Kiểu trình chiếu
+const MODES = [['fade', 'Fade'], ['slide', 'Slide'], ['flip', 'Card flip'], ['deal', 'Deal'], ['pages', 'Album pages'], ['spin', 'Spin 3D']];
 
 const $ = s => document.querySelector(s);
 const app = $('#app');
 
 // ===== Cài đặt (lưu trong localStorage) =====
-const OPT_DEFAULT = { sec: 5, shuffle: false, motion: true, showName: true, cols: 3, fit: 'cover', init: false };
+// per: số ô mỗi trang sổ album, mode: kiểu trình chiếu
+const OPT_DEFAULT = { sec: 5, shuffle: false, motion: true, showName: true, per: 9, mode: 'fade', init: false };
 let opt = Object.assign({}, OPT_DEFAULT, load(OPT_KEY));
+if (!GRID[opt.per]) opt.per = 9;
+if (!MODES.some(m => m[0] === opt.mode)) opt.mode = 'fade';
 function load(key) {
   try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; }
 }
 function saveOpt() {
   try { localStorage.setItem(OPT_KEY, JSON.stringify(opt)); } catch (e) {}
-  applyOpt();
-}
-function applyOpt() {
-  document.documentElement.style.setProperty('--cols', opt.cols);
-  document.documentElement.style.setProperty('--fit', opt.fit);
 }
 
 // ===== Lưu dữ liệu bằng IndexedDB =====
-// albums: {id, name, order}
-// cards : {id, album, name, order, added, size}   (size: dung lượng ảnh + ảnh nhỏ, byte)
+// albums: {id, name, order}  (chỉ dùng 1 album = sổ album Pikachu; dữ liệu cũ nhiều album được gộp lại lúc mở app)
+// cards : {id, album, name, order, added, size}   (order: vị trí trong sổ 0, 1, 2...; size: dung lượng ảnh + ảnh nhỏ, byte)
 // imgs  : {id, b}  ảnh thẻ (Blob JPEG)      thumbs: {id, b}  ảnh nhỏ (Blob JPEG)
 // Thông tin album / thẻ được đọc hết vào bộ nhớ lúc mở app, ảnh thì chỉ đọc khi cần hiện.
 let albums = [], cards = [];
@@ -305,6 +271,26 @@ async function write(ops) {
 }
 const isFull = e => e && (e.name === 'QuotaExceededError' || /quota/i.test(e.message || ''));
 
+// Gộp tất cả thẻ vào 1 album (giữ thứ tự: theo thứ tự album cũ rồi thứ tự thẻ), đánh lại vị trí 0, 1, 2...
+async function unifyAlbum() {
+  const list = [...albums].sort(byOrder);
+  let main = list[0];
+  const ops = [];
+  if (!main) {
+    main = { id: uid(), name: 'Pikachu', order: 0 };
+    ops.push(['albums', 'put', main]);
+  }
+  const ao = new Map(list.map(a => [a.id, a.order]));
+  const ordered = [...cards].sort((a, b) => ((ao.get(a.album) || 0) - (ao.get(b.album) || 0)) || a.order - b.order);
+  ordered.forEach((c, i) => {
+    if (c.album !== main.id || c.order !== i) { c.album = main.id; c.order = i; ops.push(['cards', 'put', c]); }
+  });
+  list.slice(1).forEach(a => ops.push(['albums', 'delete', a.id]));
+  await write(ops);
+  albums = [main];
+}
+const mainId = () => albums[0].id;
+
 // ===== Ảnh =====
 const thumbUrls = new Map(); // id thẻ → URL ảnh nhỏ (giữ lại để không phải đọc lại)
 async function thumbUrl(id) {
@@ -324,35 +310,43 @@ async function imgUrl(id) {
   const r = (await getOne('imgs', id)) || (await getOne('thumbs', id));
   return r ? URL.createObjectURL(r.b) : '';
 }
-// Chỉ đọc ảnh nhỏ khi ô thẻ sắp hiện trên màn hình (album nhiều thẻ vẫn mở nhanh)
-const thumbIO = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => {
-  if (!e.isIntersecting) return;
-  thumbIO.unobserve(e.target);
-  setThumb(e.target);
-}), { rootMargin: '600px 0px' }) : null;
 function setThumb(el) {
   const u = thumbUrls.get(el.dataset.t);
   if (u) el.src = u;
   else thumbUrl(el.dataset.t).then(x => { if (x) el.src = x; });
 }
-function fillThumbs() {
-  app.querySelectorAll('img[data-t]').forEach(el => {
+// Chỉ đọc ảnh nhỏ khi ô thẻ sắp hiện trên màn hình (danh sách nhiều thẻ vẫn mở nhanh)
+const thumbIO = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  thumbIO.unobserve(e.target);
+  setThumb(e.target);
+}), { rootMargin: '600px 0px' }) : null;
+function fillThumbs(root) {
+  (root || app).querySelectorAll('img[data-t]').forEach(el => {
     if (thumbIO && !thumbUrls.has(el.dataset.t)) thumbIO.observe(el); else setThumb(el);
   });
 }
 
-function loadImage(blob) {
-  return new Promise((res, rej) => {
-    const url = URL.createObjectURL(blob);
-    const im = new Image();
-    im.onload = () => { URL.revokeObjectURL(url); res(im); };
-    im.onerror = () => { URL.revokeObjectURL(url); rej(new Error('Cannot read image')); };
-    im.src = url;
-  });
+// Đọc ảnh. decode(): giải mã ảnh ở luồng nền, không làm đứng màn hình
+async function loadImage(blob) {
+  const url = URL.createObjectURL(blob);
+  const im = new Image();
+  const loaded = new Promise((res, rej) => { im.onload = res; im.onerror = rej; });
+  im.src = url;
+  try {
+    if (im.decode) await im.decode().catch(() => loaded);
+    else await loaded;
+    if (!im.naturalWidth) throw new Error();
+    return im;
+  } catch (e) {
+    throw new Error('Cannot read image');
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }
-// Thu nhỏ ảnh (cạnh dài ≤ max) và chuyển thành JPEG
-function toJpeg(im, max, q) {
-  const w0 = im.naturalWidth, h0 = im.naturalHeight;
+// Vẽ ảnh (hoặc canvas) sang canvas mới, cạnh dài ≤ max
+function drawScaled(src, max) {
+  const w0 = src.naturalWidth || src.width, h0 = src.naturalHeight || src.height;
   const s = Math.min(1, max / Math.max(w0, h0));
   const c = document.createElement('canvas');
   c.width = Math.max(1, Math.round(w0 * s));
@@ -360,11 +354,32 @@ function toJpeg(im, max, q) {
   const g = c.getContext('2d');
   g.fillStyle = '#fff';               // ảnh PNG nền trong suốt → nền trắng
   g.fillRect(0, 0, c.width, c.height);
-  g.drawImage(im, 0, 0, c.width, c.height);
+  g.drawImage(src, 0, 0, c.width, c.height);
+  return c;
+}
+// Canvas → JPEG, xong thì giải phóng canvas (iPhone giới hạn bộ nhớ canvas)
+function canvasJpeg(c, q) {
   return new Promise((res, rej) => c.toBlob(b => {
-    c.width = c.height = 0;           // giải phóng bộ nhớ (iPhone giới hạn bộ nhớ canvas)
+    c.width = c.height = 0;
     b ? res(b) : rej(new Error('Cannot convert image'));
   }, 'image/jpeg', q));
+}
+// Thu nhỏ ảnh (cạnh dài ≤ max) và chuyển thành JPEG
+const toJpeg = (im, max, q) => canvasJpeg(drawScaled(im, max), q);
+// Ảnh thẻ + ảnh nhỏ. Ảnh gốc (12MP...) chỉ vẽ 1 lần; ảnh nhỏ tạo từ ảnh đã thu nhỏ (nhanh hơn nhiều)
+async function makeCardImages(file) {
+  const im = await loadImage(file);
+  const big = drawScaled(im, IMG_MAX);
+  const small = drawScaled(big, THUMB_MAX);
+  const t = await canvasJpeg(small, 0.8);
+  const b = await canvasJpeg(big, 0.88);
+  return { b, t };
+}
+const idle = () => new Promise(r => setTimeout(r, 30)); // nhường cho màn hình xử lý thao tác bấm
+function progress(done, total) {
+  const p = $('#prog');
+  p.style.transform = `scaleX(${total ? done / total : 0})`;
+  if (done >= total) setTimeout(() => { p.style.transform = 'scaleX(0)'; }, 600);
 }
 
 // ===== Tiện ích =====
@@ -372,17 +387,9 @@ function uid() { return Date.now().toString(36) + Math.random().toString(36).sli
 function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
-const albumById = id => albums.find(a => a.id === id);
 const byOrder = (a, b) => a.order - b.order;
-function albumsSorted() { return [...albums].sort(byOrder); }
-// Thẻ của 1 album theo thứ tự. 'all': tất cả thẻ, theo thứ tự album rồi thứ tự thẻ
-function cardsOf(aid) {
-  if (aid === 'all') {
-    const ao = new Map(albums.map(a => [a.id, a.order]));
-    return [...cards].sort((a, b) => ((ao.get(a.album) || 0) - (ao.get(b.album) || 0)) || a.order - b.order);
-  }
-  return cards.filter(c => c.album === aid).sort(byOrder);
-}
+const allCards = () => [...cards].sort(byOrder);    // tất cả thẻ theo vị trí trong sổ
+const cardById = id => cards.find(c => c.id === id);
 const nextOrder = list => list.reduce((m, x) => Math.max(m, x.order), -1) + 1;
 
 let toastTimer;
@@ -399,7 +406,7 @@ function setBar(title, backHash, actions) {
   $('#title').textContent = title;
   const b = $('#back');
   b.hidden = backHash == null;
-  b.onclick = () => { location.hash = backHash; };
+  b.onclick = () => go(backHash);
   const box = $('#actions');
   box.innerHTML = '';
   (actions || []).forEach(([text, label, fn, cls]) => {
@@ -410,10 +417,19 @@ function setBar(title, backHash, actions) {
     btn.onclick = fn;
     box.appendChild(btn);
   });
+  document.documentElement.style.setProperty('--hh', $('header').offsetHeight + 'px');
+}
+window.addEventListener('resize', () => document.documentElement.style.setProperty('--hh', $('header').offsetHeight + 'px'));
+
+// Chuyển màn hình. Nếu #hash không đổi (sự kiện hashchange không chạy) thì tự vẽ lại
+function go(hash) {
+  const before = location.hash;
+  location.hash = hash;
+  if (location.hash === before) render();
 }
 
 // Hộp thoại chung: trả về Promise {btn, v}
-// fields: [{name, label, value, ph, max, select: [[giá trị, nhãn], ...]}]
+// fields: [{name, label, value, ph, max, select: [[giá trị, nhãn], ...], choice: [[giá trị, nhãn], ...] (hàng nút chọn)}]
 // buttons: [{label, value, cls}]  (nút có cls 'primary' được chọn khi bấm Enter)
 function ask({ title, msg, fields = [], buttons }) {
   return new Promise(resolve => {
@@ -427,11 +443,20 @@ function ask({ title, msg, fields = [], buttons }) {
     };
     d.oncancel = e => { e.preventDefault(); finish(null); };
     $('#dlgTitle').textContent = title;
-    $('#dlgBody').innerHTML = (msg ? `<p>${esc(msg)}</p>` : '') + fields.map(f => f.select
+    $('#dlgBody').innerHTML = (msg ? `<p>${esc(msg)}</p>` : '') + fields.map(f => f.choice
+      ? `<div class="label">${esc(f.label)}</div><input type="hidden" name="${f.name}" value="${esc(f.value)}">
+          <div class="chips">${f.choice.map(([v, l]) => `<button type="button" data-v="${esc(v)}" class="${v === f.value ? 'on' : ''}">${esc(l)}</button>`).join('')}</div>`
+      : f.select
       ? `<label>${esc(f.label)}<select name="${f.name}">${f.select.map(([v, l]) =>
           `<option value="${esc(v)}" ${v === f.value ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></label>`
       : `<label>${esc(f.label)}<input type="text" name="${f.name}" value="${esc(f.value || '')}" placeholder="${esc(f.ph || '')}"
           maxlength="${f.max || 40}" autocomplete="off"></label>`).join('');
+    d.querySelectorAll('#dlgBody .chips').forEach(ch => ch.onclick = e => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      ch.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+      ch.previousElementSibling.value = b.dataset.v;
+    });
     const box = $('#dlgBtns');
     box.innerHTML = '';
     buttons.forEach(b => {
@@ -446,7 +471,7 @@ function ask({ title, msg, fields = [], buttons }) {
       if (e.key === 'Enter' && pri) { e.preventDefault(); finish(pri.value); }
     });
     d.showModal();
-    const first = d.querySelector('input');
+    const first = d.querySelector('input[type=text]');
     if (first) { first.focus(); first.select(); }
   });
 }
@@ -455,142 +480,252 @@ async function confirmDlg(title, msg, okLabel) {
   return r.btn === 'ok';
 }
 
-// ===== Điều hướng (theo #hash): '' màn hình chính, 'a/<id>' album ('a/all' tất cả thẻ), 'set' Settings =====
-let homeEdit = false;    // màn hình chính: chế độ đổi thứ tự album
-let sel = null;          // album: Set id thẻ đang chọn (null = không ở chế độ Select)
-window.addEventListener('hashchange', () => { homeEdit = false; sel = null; render(); window.scrollTo(0, 0); });
+// ===== Điều hướng (theo #hash): '' sổ album, 'edit' sắp xếp, 'set' Settings =====
+let sel = new Set();     // sắp xếp: id thẻ đang chọn
+window.addEventListener('hashchange', () => { sel = new Set(); render(); window.scrollTo(0, 0); });
 function render() {
-  const [page, id] = location.hash.slice(1).split('/');
-  if (page === 'a' && (id === 'all' || albumById(id))) renderAlbum(id);
+  const page = location.hash.slice(1);
+  app.className = '';
+  if (page === 'edit') renderEdit();
   else if (page === 'set') renderSettings();
-  else renderHome();
+  else renderBinder();
 }
+const pickPhotos = () => $('#addIn').click();
 
-// ===== Màn hình chính: danh sách album =====
-function coverHtml(list) {
-  const top = list.slice(0, 3);
-  const pos = { 1: [[0, 0]], 2: [[-14, -7], [14, 7]], 3: [[-22, -12], [0, 0], [22, 12]] }[top.length]; // [lệch ngang %, góc xoay]
-  return `<div class="cov">${top.length ? top.map((c, i) =>
-    `<img data-t="${c.id}" alt="" style="--dx:${pos[i][0]}%;--r:${pos[i][1]}deg">`).join('') : '<span class="ph">🃏</span>'}</div>`;
+// ===== Sổ album (màn hình chính) =====
+let pg = 0;          // trang đang mở
+let flipping = false;
+const pageCount = () => Math.max(1, Math.ceil(cards.length / opt.per));
+// HTML các ô của 1 trang. add: ô trống đầu tiên sau thẻ cuối cùng hiện nút ＋
+function pocketsHtml(list, p, per, add) {
+  const [c, r] = GRID[per];
+  let h = '';
+  for (let k = 0; k < per; k++) {
+    const i = p * per + k, cd = list[i];
+    if (cd) h += `<div class="pocket" data-c="${cd.id}"><img data-t="${cd.id}" alt=""></div>`;
+    else if (add && i === list.length) h += '<div class="pocket add" aria-label="Add cards">＋</div>';
+    else h += '<div class="pocket"></div>';
+  }
+  return `<div class="pockets" style="--c:${c};--r:${r}">${h}</div>`;
 }
-function renderHome() {
-  const list = albumsSorted();
-  setBar('Picards', null, [
-    ...(cards.length ? [[PLAY, 'Slideshow all', () => startShow(cardsOf('all'), 0)]] : []),
-    ...(list.length > 1 ? [[homeEdit ? 'Done' : '⇄', homeEdit ? 'Done' : 'Change order', () => { homeEdit = !homeEdit; renderHome(); }, homeEdit ? 'text' : '']] : []),
-    ['⚙', 'Settings', () => { location.hash = 'set'; }]
+function pageEl(list, p) {
+  const el = document.createElement('div');
+  el.className = 'page';
+  el.innerHTML = pocketsHtml(list, p, opt.per, true);
+  el.querySelectorAll('img[data-t]').forEach(setThumb);
+  return el;
+}
+function renderBinder() {
+  setBar('', null, [
+    ['＋', 'Add cards', pickPhotos],
+    ...(cards.length ? [[PLAY, 'Slideshow', () => chooseShow(allCards(), pg * opt.per)], ['✎', 'Arrange cards', () => go('edit')]] : []),
+    ['⚙', 'Settings', () => go('set')]
   ]);
-  const tile = (a, i) => {
-    const cs = cardsOf(a.id);
-    const inner = `${coverHtml(cs)}<div class="cap"><b>${esc(a.name)}</b><small>${cs.length} cards</small></div>`;
-    if (!homeEdit) return `<a class="alb" href="#a/${a.id}">${inner}</a>`;
-    return `<div class="alb" data-a="${a.id}">${inner}
-      ${i ? '<button class="mv l" data-mv="-1" aria-label="Move earlier">◀&#xFE0E;</button>' : ''}
-      ${i < list.length - 1 ? '<button class="mv r" data-mv="1" aria-label="Move later">▶&#xFE0E;</button>' : ''}</div>`;
-  };
+  $('#title').innerHTML = '<span class="bolt">⚡</span>Pi<b>cards</b>';
+  app.className = 'fill';
   app.innerHTML = `
-    ${homeEdit ? '<p class="muted">◀ ▶ change the order of albums.</p>' : ''}
-    <div class="albums">
-      ${list.length > 1 && !homeEdit ? `<a class="alb" href="#a/all">${coverHtml(cardsOf('all'))}
-        <div class="cap"><b>All cards</b><small>${cards.length} cards</small></div></a>` : ''}
-      ${list.map(tile).join('')}
-    </div>
-    ${list.length ? '' : '<p class="empty">No albums yet.</p>'}
-    ${homeEdit ? '' : '<button class="btn newalb" id="newAlb">＋ New album</button>'}`;
-  fillThumbs();
-  const nb = $('#newAlb');
-  if (nb) nb.onclick = newAlbum;
-  app.querySelectorAll('[data-mv]').forEach(b => b.onclick = async () => {
-    const i = list.findIndex(a => a.id === b.closest('[data-a]').dataset.a);
-    const j = i + Number(b.dataset.mv);
-    const o = list[i].order;
-    list[i].order = list[j].order;
-    list[j].order = o;
-    await write([['albums', 'put', list[i]], ['albums', 'put', list[j]]]);
-    renderHome();
-  });
+    <div class="chips" id="per">${Object.keys(GRID).map(n => `<button data-n="${n}" class="${+n === opt.per ? 'on' : ''}">${n}</button>`).join('')}</div>
+    <div class="binder">
+      <div class="book" id="book"></div>
+      <div class="pnav"><button id="pPrev" aria-label="Previous page">‹</button><span id="pno"></span><button id="pNext" aria-label="Next page">›</button></div>
+    </div>`;
+  $('#per').onclick = e => {
+    const b = e.target.closest('button');
+    if (!b || +b.dataset.n === opt.per) return;
+    const first = pg * opt.per;              // giữ thẻ đầu trang hiện tại vẫn nằm trong trang mới
+    opt.per = +b.dataset.n;
+    saveOpt();
+    pg = Math.floor(first / opt.per);
+    renderBinder();
+  };
+  $('#pPrev').onclick = () => flip(-1);
+  $('#pNext').onclick = () => flip(1);
+  bookEvents($('#book'));
+  drawBook();
 }
-
-async function newAlbum() {
-  const r = await ask({ title: 'New album', fields: [{ name: 'name', label: 'Album name', ph: 'Pikachu' }],
-    buttons: [{ label: 'Cancel', value: null }, { label: 'Create', value: 'ok', cls: 'primary' }] });
-  if (r.btn !== 'ok' || !r.v.name) return;
-  const a = { id: uid(), name: r.v.name, order: nextOrder(albums) };
-  await write([['albums', 'put', a]]);
-  albums.push(a);
-  location.hash = 'a/' + a.id;
+function drawBook() {
+  const book = $('#book');
+  if (!book) return;
+  pg = Math.min(pg, pageCount() - 1);
+  const list = allCards();
+  book.innerHTML = '';
+  book.appendChild(pageEl(list, pg));
+  $('#pno').innerHTML = `Page ${pg + 1} / ${pageCount()}<small>${cards.length} cards</small>`;
+  $('#pPrev').disabled = pg === 0;
+  $('#pNext').disabled = pg >= pageCount() - 1;
+  // đọc trước ảnh nhỏ của trang trước / sau để lật trang không bị trống
+  [pg - 1, pg + 1].forEach(p => list.slice(p * opt.per, (p + 1) * opt.per).forEach(c => thumbUrl(c.id)));
 }
-
-// ===== Album: danh sách thẻ =====
-function renderAlbum(aid) {
-  const a = albumById(aid);
-  const list = cardsOf(aid);
-  if (sel) {
-    setBar(`${sel.size} selected`, '', [
-      ['All', 'Select all', () => { sel = sel.size === list.length ? new Set() : new Set(list.map(c => c.id)); renderAlbum(aid); }, 'text'],
-      ['Done', 'Done', () => { sel = null; renderAlbum(aid); }, 'text']]);
+// Lật trang. Sang trang sau: trang hiện tại xoay quanh mép trái để lộ trang sau nằm bên dưới.
+// Về trang trước: trang trước lật từ bên trái trở lại đè lên trang hiện tại.
+function flip(d) {
+  const to = pg + d;
+  if (flipping || to < 0 || to >= pageCount()) return;
+  flipping = true;
+  const book = $('#book'), list = allCards();
+  const el = pageEl(list, to);
+  if (d > 0) {
+    book.insertBefore(el, book.firstChild);
+    const top = book.lastElementChild;
+    requestAnimationFrame(() => requestAnimationFrame(() => top.classList.add('turn')));
   } else {
-    setBar(a ? a.name : 'All cards', '', [
-      ...(list.length ? [[PLAY, 'Slideshow', () => startShow(list, 0)], ['Select', 'Select cards', () => { sel = new Set(); renderAlbum(aid); }, 'text']] : []),
-      ...(a ? [['⋯', 'Album menu', () => albumMenu(a)]] : [])]);
+    el.classList.add('back');
+    book.appendChild(el);
+    void el.offsetWidth;
+    el.classList.remove('back');
   }
-  app.innerHTML = list.length ? `<div class="grid">${list.map(c => `
-      <button class="cd ${sel && sel.has(c.id) ? 'sel' : ''}" data-c="${c.id}">
-        <img data-t="${c.id}" alt="">${c.name ? `<span class="nm">${esc(c.name)}</span>` : ''}${sel ? '<span class="ck"></span>' : ''}
-      </button>`).join('')}</div>`
-    : `<p class="empty">${a ? 'No cards yet.<br>Tap ＋ to add photos of your cards.' : 'No cards yet.'}</p>`;
-  if (sel) {
-    const one = sel.size === 1;
-    const i = one ? list.findIndex(c => sel.has(c.id)) : -1;
-    app.insertAdjacentHTML('beforeend', `<div class="ebar">
-      ${a ? `<button class="btn" data-e="-1" ${one && i > 0 ? '' : 'disabled'} aria-label="Move earlier">◀&#xFE0E;</button>
-      <button class="btn" data-e="1" ${one && i < list.length - 1 ? '' : 'disabled'} aria-label="Move later">▶&#xFE0E;</button>` : ''}
-      <button class="btn" data-e="name" ${one ? '' : 'disabled'}>Name</button>
-      <button class="btn" data-e="move" ${sel.size && albums.length > 1 ? '' : 'disabled'}>Move</button>
-      <button class="btn danger" data-e="del" ${sel.size ? '' : 'disabled'}>Delete</button></div>`);
-  } else if (a) {
-    app.insertAdjacentHTML('beforeend', '<button class="fab" id="add" aria-label="Add cards">＋</button>');
-    $('#add').onclick = () => { $('#addIn').dataset.album = aid; $('#addIn').click(); };
-  }
-  fillThumbs();
-  app.querySelectorAll('[data-c]').forEach(b => b.onclick = () => {
-    const id = b.dataset.c;
-    if (!sel) { openViewer(list, list.findIndex(c => c.id === id)); return; }
-    if (sel.has(id)) sel.delete(id); else sel.add(id);
-    renderAlbum(aid);
+  setTimeout(() => { pg = to; flipping = false; drawBook(); }, 830);
+}
+// Vuốt trái / phải: lật trang. Chạm vào thẻ: xem to. Chạm ô ＋: thêm ảnh
+function bookEvents(book) {
+  let p0 = null, swiped = false;
+  book.addEventListener('pointerdown', e => { p0 = { x: e.clientX, y: e.clientY }; swiped = false; });
+  book.addEventListener('pointerup', e => {
+    if (!p0) return;
+    const dx = e.clientX - p0.x, dy = e.clientY - p0.y;
+    p0 = null;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { swiped = true; flip(dx < 0 ? 1 : -1); }
   });
-  app.querySelectorAll('[data-e]').forEach(b => b.onclick = () => editAction(b.dataset.e, aid, list));
+  book.addEventListener('click', e => {
+    if (swiped || flipping) { swiped = false; return; }
+    const pk = e.target.closest('.pocket');
+    if (!pk) return;
+    if (pk.dataset.c) {
+      const list = allCards();
+      openViewer(list, list.findIndex(c => c.id === pk.dataset.c));
+    } else if (pk.classList.contains('add')) pickPhotos();
+  });
 }
 
-async function editAction(act, aid, list) {
-  const chosen = list.filter(c => sel.has(c.id));
-  if (act === '-1' || act === '1') {           // đổi thứ tự: đổi chỗ với thẻ bên cạnh
-    const i = list.indexOf(chosen[0]);
-    const j = i + Number(act);
-    const o = list[i].order;
-    list[i].order = list[j].order;
-    list[j].order = o;
-    await write([['cards', 'put', list[i]], ['cards', 'put', list[j]]]);
-  } else if (act === 'name') {
-    if (!(await renameCard(chosen[0]))) return;
-  } else if (act === 'move') {
-    const others = albumsSorted().filter(a => a.id !== aid);
-    const r = await ask({ title: `Move ${chosen.length} cards`,
-      fields: [{ name: 'to', label: 'To album', select: others.map(a => [a.id, a.name]), value: others[0].id }],
-      buttons: [{ label: 'Cancel', value: null }, { label: 'Move', value: 'ok', cls: 'primary' }] });
-    if (r.btn !== 'ok' || !albumById(r.v.to)) return;
-    let o = nextOrder(cardsOf(r.v.to));
-    chosen.forEach(c => { c.album = r.v.to; c.order = o++; });
-    await write(chosen.map(c => ['cards', 'put', c]));
+// ===== Sắp xếp: nhấn giữ thẻ rồi kéo để đổi chỗ, chạm để chọn (xóa / đặt tên) =====
+function renderEdit() {
+  const list = allCards();
+  setBar('Arrange', '', [
+    ['＋', 'Add cards', pickPhotos],
+    ['All', 'Select all', () => { sel = sel.size === list.length ? new Set() : new Set(list.map(c => c.id)); renderEdit(); }, 'text']
+  ]);
+  const [c] = GRID[opt.per];
+  let h = '';
+  list.forEach((cd, i) => {
+    if (i % opt.per === 0) h += `<div class="ph">Page ${i / opt.per + 1}</div>`;
+    h += editTile(cd, i);
+  });
+  app.innerHTML = list.length
+    ? `<p class="muted">Touch and hold a card, then drag it to a new place. Tap cards to select them.</p>
+       <div class="egrid" id="egrid" style="--c:${c}">${h}</div>`
+    : '<p class="empty">No cards yet.<br>Tap ＋ to add photos of your cards.</p>';
+  app.insertAdjacentHTML('beforeend', `<div class="ebar">
+    <button class="btn" id="eName">Name</button>
+    <button class="btn danger" id="eDel">Delete</button></div>`);
+  $('#eName').onclick = async () => {
+    const c1 = cardById([...sel][0]);
+    if (c1 && (await renameCard(c1))) renderEdit();
+  };
+  $('#eDel').onclick = async () => {
+    if (!(await confirmDlg('Delete cards', `Delete ${sel.size} selected cards? This cannot be undone.`, 'Delete'))) return;
+    await deleteCards([...sel]);
     sel = new Set();
-    toast(`Moved to ${albumById(r.v.to).name}`);
-  } else if (act === 'del') {
-    if (!(await confirmDlg('Delete cards', `Delete ${chosen.length} selected cards? This cannot be undone.`, 'Delete'))) return;
-    await deleteCards(chosen.map(c => c.id));
-    sel = new Set();
-  }
-  renderAlbum(aid);
+    await renumber();
+    renderEdit();
+  };
+  updEdit();
+  fillThumbs();
+  const g = $('#egrid');
+  if (g) editEvents(g);
 }
+function editTile(cd, i) {
+  return `<div class="et ${sel.has(cd.id) ? 'sel' : ''}" data-c="${cd.id}"><img data-t="${cd.id}" alt="" draggable="false">
+    <span class="no">${i + 1}</span>${cd.name ? `<span class="nm">${esc(cd.name)}</span>` : ''}</div>`;
+}
+function updEdit() {
+  $('#title').textContent = sel.size ? `${sel.size} selected` : 'Arrange';
+  $('#eName').disabled = sel.size !== 1;
+  $('#eDel').disabled = !sel.size;
+}
+// Đánh lại vị trí thẻ 0, 1, 2... theo thứ tự hiện tại
+async function renumber(ids) {
+  const ops = [];
+  (ids || allCards().map(c => c.id)).forEach((id, i) => {
+    const c = cardById(id);
+    if (c && c.order !== i) { c.order = i; ops.push(['cards', 'put', c]); }
+  });
+  await write(ops);
+}
+
+let drag = null; // thẻ đang kéo: {el (ô gốc, thành chỗ trống), g (bản sao bay theo ngón tay), ox, oy, x, y, raf}
+function editEvents(grid) {
+  let pd = null;   // đang nhấn (chưa đủ lâu để kéo)
+  const cancel = () => { if (pd) clearTimeout(pd.timer); pd = null; };
+  grid.addEventListener('pointerdown', e => {
+    const t = e.target.closest('[data-c]');
+    if (!t || drag || e.button > 0) return;
+    pd = { t, x: e.clientX, y: e.clientY };
+    pd.timer = setTimeout(() => { const p = pd; pd = null; startDrag(p.t, p.x, p.y); }, 400);
+  });
+  grid.addEventListener('pointermove', e => {
+    if (pd && Math.hypot(e.clientX - pd.x, e.clientY - pd.y) > 8) cancel();    // ngón tay di chuyển sớm = đang cuộn trang
+  });
+  grid.addEventListener('pointerup', () => {
+    if (!pd) return;
+    const t = pd.t;
+    cancel();
+    const id = t.dataset.c;                      // chạm nhanh: chọn / bỏ chọn
+    if (sel.has(id)) sel.delete(id); else sel.add(id);
+    t.classList.toggle('sel', sel.has(id));
+    updEdit();
+  });
+  grid.addEventListener('pointercancel', cancel);
+  grid.addEventListener('contextmenu', e => e.preventDefault());
+}
+function startDrag(el, x, y) {
+  const r = el.getBoundingClientRect();
+  const g = el.cloneNode(true);
+  g.classList.add('ghost');
+  g.classList.remove('sel');
+  g.style.width = r.width + 'px';
+  g.style.height = r.height + 'px';
+  document.body.appendChild(g);
+  el.classList.add('gap');
+  drag = { el, g, ox: x - r.left, oy: y - r.top, x, y, raf: 0 };
+  if (navigator.vibrate) navigator.vibrate(15);
+  dragFrame();
+}
+// Mỗi khung hình: thẻ bay theo ngón tay, chỗ trống dời tới vị trí dưới ngón tay, gần mép trên / dưới thì tự cuộn
+function dragFrame() {
+  if (!drag) return;
+  const { g, el, x, y } = drag;
+  g.style.left = (x - drag.ox) + 'px';
+  g.style.top = (y - drag.oy) + 'px';
+  if (y < 110) window.scrollBy(0, -10);
+  else if (y > innerHeight - 110) window.scrollBy(0, 10);
+  const t = document.elementFromPoint(x, y);
+  const over = t && t.closest('#egrid [data-c]');
+  if (over && over !== el) {
+    const tiles = [...$('#egrid').querySelectorAll('[data-c]')];
+    if (tiles.indexOf(el) < tiles.indexOf(over)) over.after(el); else over.before(el);
+  }
+  drag.raf = requestAnimationFrame(dragFrame);
+}
+function dragMove(x, y) { if (drag) { drag.x = x; drag.y = y; } }
+async function endDrag() {
+  if (!drag) return;
+  const { el, g, raf } = drag;
+  drag = null;
+  cancelAnimationFrame(raf);
+  g.remove();
+  el.classList.remove('gap');
+  await renumber([...$('#egrid').querySelectorAll('[data-c]')].map(x => x.dataset.c));
+  renderEdit();
+}
+document.addEventListener('pointermove', e => dragMove(e.clientX, e.clientY));
+document.addEventListener('touchmove', e => {         // đang kéo thẻ: không cho trang cuộn theo ngón tay
+  if (!drag) return;
+  e.preventDefault();
+  dragMove(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive: false });
+document.addEventListener('pointerup', endDrag);
+document.addEventListener('pointercancel', endDrag);
+document.addEventListener('touchend', endDrag);
 
 async function renameCard(c) {
   const r = await ask({ title: 'Card name', fields: [{ name: 'name', label: 'Name', value: c.name, ph: 'Pikachu V' }],
@@ -608,52 +743,45 @@ async function deleteCards(ids) {
   cards = cards.filter(c => !set.has(c.id));
 }
 
-async function albumMenu(a) {
-  const n = cardsOf(a.id).length;
-  const r = await ask({ title: a.name, msg: `${n} cards`,
-    buttons: [{ label: 'Cancel', value: null }, { label: 'Delete album', value: 'del', cls: 'danger' }, { label: 'Rename', value: 'ren', cls: 'primary' }] });
-  if (r.btn === 'ren') {
-    const r2 = await ask({ title: 'Rename album', fields: [{ name: 'name', label: 'Album name', value: a.name }],
-      buttons: [{ label: 'Cancel', value: null }, { label: 'Save', value: 'ok', cls: 'primary' }] });
-    if (r2.btn !== 'ok' || !r2.v.name) return;
-    a.name = r2.v.name;
-    await write([['albums', 'put', a]]);
-    render();
-  } else if (r.btn === 'del') {
-    if (!(await confirmDlg('Delete album', `Delete album "${a.name}"${n ? ` and its ${n} cards` : ''}? This cannot be undone.`, 'Delete'))) return;
-    await deleteCards(cardsOf(a.id).map(c => c.id));
-    await write([['albums', 'delete', a.id]]);
-    albums = albums.filter(x => x.id !== a.id);
-    location.hash = '';
-  }
-}
-
-// ===== Thêm thẻ (chọn nhiều ảnh cùng lúc từ Photos / camera) =====
+// ===== Thêm thẻ (chọn nhiều ảnh cùng lúc từ Photos / camera), thêm vào cuối sổ =====
+// Mỗi ảnh xong là hiện ngay. Trong lúc thêm vẫn bấm được nút khác (việc thêm ảnh tiếp tục chạy)
 $('#addIn').onchange = async e => {
   const files = [...e.target.files];
-  const aid = e.target.dataset.album;
   e.target.value = '';
-  if (!files.length || !albumById(aid)) return;
-  let order = nextOrder(cardsOf(aid));
+  if (!files.length) return;
+  let order = nextOrder(cards);
+  if (location.hash === '' || location.hash === '#') { pg = Math.floor(order / opt.per); drawBook(); }  // mở trang có thẻ mới
   let ok = 0, bad = 0;
+  progress(0, files.length);
   for (let i = 0; i < files.length; i++) {
     toast(`Adding ${i + 1} / ${files.length}…`, true);
+    await idle();
     try {
-      const im = await loadImage(files[i]);
-      const b = await toJpeg(im, IMG_MAX, 0.88);
-      const t = await toJpeg(im, THUMB_MAX, 0.8);
-      const c = { id: uid(), album: aid, name: '', order: order++, added: Date.now(), size: b.size + t.size };
+      const { b, t } = await makeCardImages(files[i]);
+      const c = { id: uid(), album: mainId(), name: '', order: order++, added: Date.now(), size: b.size + t.size };
       await write([['imgs', 'put', { id: c.id, b }], ['thumbs', 'put', { id: c.id, b: t }], ['cards', 'put', c]]);
       cards.push(c);
       ok++;
+      showNewCard(c);
     } catch (err) {
       if (isFull(err)) { toast('Storage is full'); break; }
       bad++;
     }
+    progress(i + 1, files.length);
   }
+  progress(files.length, files.length);
   toast(`Added ${ok} cards` + (bad ? ` (${bad} could not be read)` : ''));
-  if (location.hash === '#a/' + aid) { renderAlbum(aid); window.scrollTo(0, document.body.scrollHeight); }
+  if (!vw && !sh && !drag) render();          // vẽ lại nút trên thanh tiêu đề (▶, ✎...)
 };
+function showNewCard(c) {
+  if (vw || sh || drag) return;
+  if (location.hash === '#edit') return;      // vẽ lại 1 lần khi thêm xong
+  if (!flipping && $('#book')) {
+    const i = allCards().indexOf(c);
+    if (Math.floor(i / opt.per) !== pg) pg = Math.floor(i / opt.per);
+    drawBook();
+  }
+}
 
 // ===== Xem thẻ =====
 let vw = null; // {list, i, url}
@@ -688,6 +816,9 @@ function viewGo(d) {
 }
 function closeViewer() {
   if (!vw) return;
+  // về trang sổ album có thẻ đang xem
+  const c = vw.list[vw.i];
+  if (c && cardById(c.id)) pg = Math.floor(allCards().indexOf(c) / opt.per);
   if (vw.url) URL.revokeObjectURL(vw.url);
   vw = null;
   $('#vImg').removeAttribute('src');
@@ -698,7 +829,7 @@ function closeViewer() {
 $('#vClose').onclick = closeViewer;
 $('#vPrev').onclick = () => viewGo(-1);
 $('#vNext').onclick = () => viewGo(1);
-$('#vPlay').onclick = () => { const { list, i } = vw; closeViewer(); startShow(list, i); };
+$('#vPlay').onclick = () => { const { list, i } = vw; closeViewer(); chooseShow(list, i); };
 $('#vName').onclick = async () => {
   const c = vw.list[vw.i];
   if (await renameCard(c)) $('#vCap').textContent = c.name;
@@ -707,6 +838,7 @@ $('#vDel').onclick = async () => {
   const c = vw.list[vw.i];
   if (!(await confirmDlg('Delete card', 'Delete this card? This cannot be undone.', 'Delete'))) return;
   await deleteCards([c.id]);
+  await renumber();
   vw.list.splice(vw.i, 1);
   if (!vw.list.length) { closeViewer(); return; }
   vw.i = Math.min(vw.i, vw.list.length - 1);
@@ -773,64 +905,120 @@ $('#vDel').onclick = async () => {
 })();
 
 // ===== Trình chiếu =====
-let sh = null; // {list, i, cur (lớp ảnh đang hiện 0/1), urls, timer, paused, lock, hideT}
+// Mỗi bước tạo 1 phần tử mới (ảnh thẻ, hoặc 1 trang sổ album ở kiểu 'pages') rồi chạy hiệu ứng vào / ra theo kiểu đã chọn.
+let sh = null; // {list, i (thẻ / trang đang hiện), mode, tok, timer, paused, lock, hideT}
+async function chooseShow(list, i) {
+  const r = await ask({ title: 'Slideshow', fields: [{ name: 'mode', label: 'Style', choice: MODES, value: opt.mode }],
+    buttons: [{ label: 'Cancel', value: null }, { label: 'Start', value: 'ok', cls: 'primary' }] });
+  if (r.btn !== 'ok') return;
+  opt.mode = r.v.mode;
+  saveOpt();
+  startShow(list, i);
+}
 function startShow(list, i) {
   if (!list.length) return;
   list = [...list];
+  i = Math.min(Math.max(0, i), list.length - 1);
   if (opt.shuffle) {
     const first = list.splice(i, 1)[0];        // thẻ được chọn hiện đầu tiên, các thẻ còn lại trộn ngẫu nhiên
     for (let k = list.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [list[k], list[j]] = [list[j], list[k]]; }
     list.unshift(first);
     i = 0;
   }
-  sh = { list, i, cur: 0, urls: ['', ''], timer: null, paused: false, lock: null, hideT: null };
+  const mode = opt.mode;
+  sh = { list, i: mode === 'pages' ? Math.floor(i / opt.per) : i, mode, tok: 0, timer: null, paused: false, lock: null, hideT: null };
+  $('#stage').innerHTML = '';
+  $('#shName').textContent = '';
   $('#show').hidden = false;
   document.body.classList.add('lock');
   $('#shPause').textContent = PAUSE;
   keepAwake();
   showCtl();
-  showSlide();
+  showSlide(1);
 }
-async function showSlide() {
-  const s = sh, c = s.list[s.i];
+const showCount = () => sh.mode === 'pages' ? Math.ceil(sh.list.length / opt.per) : sh.list.length;
+// Bỏ 1 phần tử khỏi sân khấu (giải phóng URL ảnh lớn)
+function dropEl(el) {
+  if (el.dataset.url) URL.revokeObjectURL(el.dataset.url);
+  el.remove();
+}
+async function showSlide(dir) {
+  const s = sh, tok = ++s.tok;
   clearTimeout(s.timer);
-  $('#shCnt').textContent = `${s.i + 1} / ${s.list.length}`;
-  const u = await imgUrl(c.id);
-  const layers = document.querySelectorAll('#show .sl');
-  const nx = 1 - s.cur, el = layers[nx];
-  el.src = u;
-  try { await el.decode(); } catch (e) {}
-  if (sh !== s || s.list[s.i] !== c) { if (s.urls[nx] !== u) URL.revokeObjectURL(u); return; }
-  el.classList.remove('kb');
-  void el.offsetWidth;                         // chạy lại hiệu ứng phóng to chậm từ đầu
-  el.style.animationDuration = (opt.sec + 1.5) + 's';
-  if (opt.motion) el.classList.add('kb');
-  el.classList.add('on');
-  layers[s.cur].classList.remove('on');
-  const old = s.urls[nx];
-  s.urls[nx] = u;
-  s.cur = nx;
-  if (old && old !== u) URL.revokeObjectURL(old);
-  $('#shName').textContent = opt.showName ? c.name : '';
+  $('#shCnt').textContent = `${s.i + 1} / ${showCount()}`;
+  let el, c = null;
+  if (s.mode === 'pages') {
+    el = document.createElement('div');
+    el.className = 'page';
+    el.innerHTML = pocketsHtml(s.list, s.i, opt.per, false);
+    await Promise.all([...el.querySelectorAll('img[data-t]')].map(async im => {
+      im.src = await thumbUrl(im.dataset.t);
+      try { await im.decode(); } catch (e) {}
+    }));
+  } else {
+    c = s.list[s.i];
+    el = new Image();
+    el.className = 'sl';
+    el.alt = '';
+    el.src = el.dataset.url = await imgUrl(c.id);
+    try { await el.decode(); } catch (e) {}
+  }
+  if (sh !== s || s.tok !== tok) { dropEl(el); return; }
+  animateIn($('#stage'), el, s.mode, dir);
+  $('#shName').textContent = opt.showName && c ? c.name : '';
   schedule();
+}
+function animateIn(st, el, mode, dir) {
+  const olds = [...st.children].filter(x => !x.dataset.out);
+  const out = (o, ms, css) => { o.dataset.out = 1; Object.assign(o.style, css); setTimeout(() => dropEl(o), ms); };
+  const later = css => requestAnimationFrame(() => requestAnimationFrame(() => Object.assign(el.style, css)));
+  const C = 'translate(-50%,-50%)';
+  if (mode === 'pages') {                      // trang mới nằm dưới, trang cũ lật sang trái như sách
+    st.insertBefore(el, st.firstChild);
+    olds.forEach(o => out(o, 1050, { transition: 'transform 1s cubic-bezier(.45,.05,.3,1)', transform: 'rotateY(-170deg)' }));
+    return;
+  }
+  st.appendChild(el);
+  if (mode === 'fade') {                       // mờ dần + phóng to chậm
+    Object.assign(el.style, { opacity: 0, transform: C });
+    later({ transition: `opacity 1s, transform ${opt.sec + 1.5}s linear`, opacity: 1, transform: opt.motion ? C + ' scale(1.08)' : C });
+    olds.forEach(o => out(o, 1000, { transition: 'opacity 1s', opacity: 0 }));
+  } else if (mode === 'slide') {               // trượt ngang
+    el.style.transform = `${C} translateX(${dir * 100}vw)`;
+    later({ transition: 'transform .9s cubic-bezier(.3,.7,.2,1)', transform: C });
+    olds.forEach(o => out(o, 900, { transition: 'transform .9s cubic-bezier(.3,.7,.2,1)', transform: `${C} translateX(${-dir * 100}vw)` }));
+  } else if (mode === 'flip') {                // lật mặt thẻ
+    el.style.transform = `${C} rotateY(${dir * 180}deg)`;
+    later({ transition: 'transform 1s ease-in-out', transform: `${C} rotateY(0deg)` });
+    olds.forEach(o => out(o, 1000, { transition: 'transform 1s ease-in-out', transform: `${C} rotateY(${-dir * 180}deg)` }));
+  } else if (mode === 'deal') {                // chia bài: bay từ dưới lên, chồng lệch nhau (giữ tối đa 5 lá)
+    const r = (Math.random() * 16 - 8).toFixed(1), dx = (Math.random() * 30 - 15).toFixed(0);
+    el.style.transform = `${C} translateY(110vh) rotate(25deg)`;
+    later({ transition: 'transform .9s cubic-bezier(.3,.7,.2,1)', transform: `${C} translateX(${dx}px) rotate(${r}deg)` });
+    if (olds.length > 4) out(olds[0], 600, { transition: 'opacity .6s', opacity: 0 });
+  } else if (mode === 'spin') {                // xoay tròn 3D rồi dừng phía trước
+    Object.assign(el.style, { opacity: 0, transform: `${C} rotateY(-540deg) scale(.3)` });
+    later({ transition: 'transform 1.4s cubic-bezier(.2,.8,.2,1),opacity .6s', opacity: 1, transform: `${C} rotateY(0deg) scale(1)` });
+    olds.forEach(o => out(o, 500, { transition: 'opacity .5s,transform .5s', opacity: 0, transform: `${C} scale(1.3)` }));
+  }
 }
 function schedule() {
   clearTimeout(sh.timer);
-  if (!sh.paused && sh.list.length > 1) sh.timer = setTimeout(() => showGo(1), opt.sec * 1000);
+  if (!sh.paused && showCount() > 1) sh.timer = setTimeout(() => showGo(1), opt.sec * 1000);
 }
 function showGo(d) {
-  if (sh.list.length < 2) return;
-  sh.i = (sh.i + d + sh.list.length) % sh.list.length;
-  showSlide();
+  const n = showCount();
+  if (n < 2) return;
+  sh.i = (sh.i + d + n) % n;
+  showSlide(d);
 }
 function stopShow() {
   if (!sh) return;
   clearTimeout(sh.timer);
   clearTimeout(sh.hideT);
   if (sh.lock) sh.lock.release().catch(() => {});
-  sh.urls.forEach(u => u && URL.revokeObjectURL(u));
   sh = null;
-  document.querySelectorAll('#show .sl').forEach(el => { el.classList.remove('on', 'kb'); el.removeAttribute('src'); });
+  [...$('#stage').children].forEach(dropEl);
   $('#show').hidden = true;
   document.body.classList.remove('lock');
 }
@@ -854,7 +1042,7 @@ $('#shPause').onclick = () => {
   schedule();
   showCtl();
 };
-// Vuốt trái / phải: chuyển ảnh. Chạm: hiện / ẩn nút
+// Vuốt trái / phải: chuyển ảnh. Vuốt xuống: đóng. Chạm: hiện / ẩn nút
 (() => {
   const box = $('#show');
   let p0 = null;
@@ -880,6 +1068,9 @@ document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeViewer();
     else if (e.key === 'ArrowRight') viewGo(1);
     else if (e.key === 'ArrowLeft') viewGo(-1);
+  } else if (location.hash === '' || location.hash === '#') {
+    if (e.key === 'ArrowRight') flip(1);
+    else if (e.key === 'ArrowLeft') flip(-1);
   }
 });
 
@@ -889,33 +1080,37 @@ function renderSettings() {
   const mb = cards.reduce((s, c) => s + (c.size || 0), 0) / 1048576;
   const sw = (key, label) => `<label class="set"><span class="grow">${label}</span>
     <span class="sw"><input type="checkbox" data-opt="${key}" ${opt[key] ? 'checked' : ''}><i></i></span></label>`;
-  const seg = (key, items) => `<div class="seg">${items.map(([v, l]) =>
+  const seg = (key, items) => `<div class="chips">${items.map(([v, l]) =>
     `<button data-seg="${key}" data-v="${v}" class="${String(opt[key]) === String(v) ? 'on' : ''}">${l}</button>`).join('')}</div>`;
   app.innerHTML = `
+    <section class="sect"><h3>Album</h3>
+      <div class="set"><span class="grow">Cards per page</span>${seg('per', Object.keys(GRID).map(n => [n, n]))}</div>
+    </section>
     <section class="sect"><h3>Slideshow</h3>
+      <div class="set"><span class="grow">Style</span>
+        <select id="oMode" aria-label="Slideshow style">${MODES.map(([v, l]) =>
+          `<option value="${v}" ${v === opt.mode ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
       <div class="set"><span class="grow">Time per card</span>
         <select id="oSec" aria-label="Time per card">${[3, 5, 8, 10, 15, 30].map(v =>
           `<option value="${v}" ${v === opt.sec ? 'selected' : ''}>${v} seconds</option>`).join('')}</select></div>
       ${sw('shuffle', 'Shuffle (random order)')}
-      ${sw('motion', 'Slow zoom effect')}
+      ${sw('motion', 'Slow zoom (Fade style)')}
       ${sw('showName', 'Show card name')}
     </section>
-    <section class="sect"><h3>Card list</h3>
-      <div class="set"><span class="grow">Columns</span>${seg('cols', [[2, '2'], [3, '3'], [4, '4']])}</div>
-      <div class="set"><span class="grow">Image</span>${seg('fit', [['cover', 'Fill'], ['contain', 'Whole']])}</div>
-    </section>
     <section class="sect"><h3>Storage &amp; backup</h3>
-      <p class="muted">${albums.length} albums · ${cards.length} cards · about ${mb.toFixed(1)} MB</p>
+      <p class="muted">${cards.length} cards · about ${mb.toFixed(1)} MB</p>
       <p class="muted">Images are stored only on this device (they are not uploaded to GitHub).
         Export a backup file regularly (save it to Files / iCloud Drive).</p>
       <div class="row"><button class="btn grow" id="exp">Export</button><button class="btn grow" id="imp">Import</button></div>
     </section>
     <p class="muted center">Picards ${VERSION}</p>`;
+  $('#oMode').onchange = e => { opt.mode = e.target.value; saveOpt(); };
   $('#oSec').onchange = e => { opt.sec = Number(e.target.value); saveOpt(); };
   app.querySelectorAll('[data-opt]').forEach(el => el.onchange = () => { opt[el.dataset.opt] = el.checked; saveOpt(); });
   app.querySelectorAll('[data-seg]').forEach(b => b.onclick = () => {
     const k = b.dataset.seg;
-    opt[k] = k === 'cols' ? Number(b.dataset.v) : b.dataset.v;
+    if (k === 'per') { const first = pg * opt.per; opt.per = Number(b.dataset.v); pg = Math.floor(first / opt.per); }
+    else opt[k] = b.dataset.v;
     saveOpt();
     renderSettings();
   });
@@ -1022,7 +1217,7 @@ async function exportData() {
   let blob;
   try {
     const z = zipWriter();
-    const data = { app: 'Picards', ver: 1, date: now.toISOString(), albums, cards };
+    const data = { app: 'Picards', ver: 2, date: now.toISOString(), albums, cards: allCards() };
     await z.add('data.json', new TextEncoder().encode(JSON.stringify(data, null, 1)));
     for (let i = 0; i < cards.length; i++) {
       toast(`Preparing backup ${i + 1} / ${cards.length}…`, true);
@@ -1075,24 +1270,25 @@ $('#fileIn').onchange = async e => {
   }
   const r = await ask({
     title: 'Import backup',
-    msg: `The file has ${inAlbums.length} albums and ${inCards.length} cards. What do you want to do?`,
+    msg: `The file has ${inCards.length} cards. What do you want to do?`,
     buttons: [{ label: 'Cancel', value: null }, { label: 'Replace all', value: 'rep', cls: 'danger' }, { label: 'Merge', value: 'merge', cls: 'primary' }]
   });
   if (!r.btn) return;
   if (r.btn === 'rep') {
-    if (!(await confirmDlg('Replace all', 'All current albums and cards will be deleted and replaced by the backup. Continue?', 'Replace'))) return;
+    if (!(await confirmDlg('Replace all', 'All current cards will be deleted and replaced by the backup. Continue?', 'Replace'))) return;
     await write(['albums', 'cards', 'imgs', 'thumbs'].map(s => [s, 'clear']));
     [...thumbUrls.keys()].forEach(dropThumb);
     albums = [];
     cards = [];
   }
-  // Gộp: album / thẻ đã có (cùng id) thì giữ nguyên, chỉ thêm cái chưa có
-  let o = nextOrder(albums);
-  inAlbums.sort(byOrder).forEach(a => { if (!albumById(a.id)) { a.order = o++; albums.push(a); } });
-  await write(inAlbums.map(a => ['albums', 'put', albumById(a.id)]));
+  // Gộp: thẻ đã có (cùng id) thì giữ nguyên, chỉ thêm thẻ chưa có, xếp vào cuối sổ theo thứ tự trong file
+  const ao = new Map(inAlbums.map(a => [a.id, a.order]));
+  inCards.sort((a, b) => ((ao.get(a.album) || 0) - (ao.get(b.album) || 0)) || a.order - b.order);
+  if (!albums.length) await unifyAlbum();
   const have = new Set(cards.map(c => c.id));
   const todo = inCards.filter(c => !have.has(c.id));
-  let ok = 0, bad = 0;
+  let order = nextOrder(cards), ok = 0, bad = 0;
+  progress(0, todo.length);
   for (let i = 0; i < todo.length; i++) {
     toast(`Importing ${i + 1} / ${todo.length}…`, true);
     const c = todo[i];
@@ -1100,11 +1296,8 @@ $('#fileIn').onchange = async e => {
       const b = await z.get(`${base}cards/${c.id}.jpg`, 'image/jpeg');
       if (!b) throw new Error();
       const t = (await z.get(`${base}thumbs/${c.id}.jpg`, 'image/jpeg')) || await toJpeg(await loadImage(b), THUMB_MAX, 0.8);
-      if (!albumById(c.album)) {                 // thẻ không thuộc album nào → album "Imported"
-        let a = albums.find(x => x.name === 'Imported');
-        if (!a) { a = { id: uid(), name: 'Imported', order: nextOrder(albums) }; albums.push(a); await write([['albums', 'put', a]]); }
-        c.album = a.id;
-      }
+      c.album = mainId();
+      c.order = order++;
       c.size = b.size + t.size;
       await write([['imgs', 'put', { id: c.id, b }], ['thumbs', 'put', { id: c.id, b: t }], ['cards', 'put', c]]);
       cards.push(c);
@@ -1113,14 +1306,15 @@ $('#fileIn').onchange = async e => {
       if (isFull(err)) { toast('Storage is full'); break; }
       bad++;
     }
+    progress(i + 1, todo.length);
   }
+  progress(todo.length, todo.length);
   toast(`Imported ${ok} cards` + (bad ? ` (${bad} failed)` : ''));
-  location.hash = '';
-  render();
+  pg = 0;
+  go('');
 };
 
 // ===== Khởi động =====
-applyOpt();
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   navigator.serviceWorker.register('./sw.js');
@@ -1129,15 +1323,8 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   try {
     albums = await getAll('albums');
     cards = await getAll('cards');
-    if (!opt.init) {                             // lần đầu mở app: tạo sẵn 1 album
-      if (!albums.length) {
-        const a = { id: uid(), name: 'My cards', order: 0 };
-        await write([['albums', 'put', a]]);
-        albums.push(a);
-      }
-      opt.init = true;
-      saveOpt();
-    }
+    await unifyAlbum();                          // dữ liệu cũ nhiều album → gộp thành 1 sổ
+    if (!opt.init) { opt.init = true; saveOpt(); }
   } catch (e) {
     setBar('Picards', null, []);
     app.innerHTML = '<p class="empty">Cannot open storage on this device.</p>';
